@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recipe — RecipeFinder</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+  <a href="index.html" class="nav-brand">
+    <span class="brand-icon">🍳</span>
+    <span>Recipe<em>Finder</em></span>
+  </a>
+  <ul class="nav-links">
+    <li><span id="nav-user-email"></span></li>
+    <li><a href="favorites.html" id="nav-favs" style="display:none"><span>♥ Saved</span></a></li>
+    <li><a href="add-recipe.html" id="nav-add" class="nav-btn-primary" style="display:none"><span>+ Add Recipe</span></a></li>
+    <li><a href="auth.html" id="nav-login"><span>Sign In</span></a></li>
+    <li><button id="nav-logout" style="display:none" onclick="handleLogout()"><span>Sign Out</span></button></li>
+  </ul>
+</nav>
+
+<!-- Back link -->
+<div style="max-width:900px;margin:0 auto;padding:1rem 1.5rem 0">
+  <a href="index.html" style="display:inline-flex;align-items:center;gap:6px;font-size:0.85rem;color:var(--bark-light);font-weight:500">
+    ← All Recipes
+  </a>
+</div>
+
+<!-- Recipe content -->
+<div id="recipe-content">
+
+  <!-- Hero -->
+  <div class="recipe-detail-hero">
+    <div class="recipe-detail-img-wrap">
+      <img id="recipe-hero-img" src="" alt="Recipe image">
+    </div>
+    <div class="recipe-detail-info">
+      <div class="recipe-detail-chips">
+        <span class="chip chip-cat" id="recipe-category"></span>
+        <span class="chip chip-cuisine" id="recipe-cuisine"></span>
+        <span class="chip chip-time">⏱ <span id="recipe-time"></span></span>
+        <span class="chip chip-diff" id="recipe-difficulty"></span>
+      </div>
+      <h1 class="recipe-detail-title" id="recipe-title">Loading…</h1>
+      <p class="recipe-detail-desc" id="recipe-description"></p>
+      <div class="recipe-detail-rating">
+        <span class="stars" id="recipe-rating"></span>
+      </div>
+      <button class="btn-fav" id="detail-fav-btn">♡ Save</button>
+    </div>
+  </div>
+
+  <!-- Ingredients + Steps -->
+  <div class="recipe-content-body">
+    <!-- Ingredients -->
+    <div>
+      <div class="content-card">
+        <h3>Ingredients</h3>
+        <ul class="ingredients-list" id="ingredients-list"></ul>
+      </div>
+    </div>
+
+    <!-- Steps -->
+    <div>
+      <div class="content-card">
+        <h3>Instructions</h3>
+        <ol class="steps-list" id="steps-list"></ol>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reviews -->
+  <div class="reviews-section" id="reviews-section">
+    <h2>Reviews <span id="reviews-count">0 Reviews</span></h2>
+
+    <!-- Write review (shown when logged in) -->
+    <div class="review-form-card" id="review-form-wrap">
+      <h4>Leave a Review</h4>
+      <form class="review-form" id="review-form" style="display:none">
+        <div>
+          <div class="form-label" style="margin-bottom:8px">Your rating</div>
+          <div class="star-picker" data-rating="0">
+            <span class="star-pick">★</span>
+            <span class="star-pick">★</span>
+            <span class="star-pick">★</span>
+            <span class="star-pick">★</span>
+            <span class="star-pick">★</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Comment (optional)</label>
+          <textarea class="form-textarea" name="comment" placeholder="Share your thoughts about this recipe…" rows="3"></textarea>
+        </div>
+        <div class="form-message"></div>
+        <button type="submit" class="btn-primary" style="align-self:flex-start;padding:10px 24px;width:auto">Submit Review</button>
+      </form>
+      <div id="review-gate" class="review-gate">
+        <a href="auth.html">Sign in</a> to leave a review
+      </div>
+    </div>
+
+    <!-- Reviews list -->
+    <div id="reviews-list"></div>
+  </div>
+
+</div>
+
+<footer>
+  <p>Made with ❤️ by <strong>RecipeFinder</strong> — Powered by Supabase</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script type="module">
+  import { updateNavAuth } from './js/auth.js';
+  import { initRecipePage } from './js/recipes.js';
+  import { initReviews } from './js/reviews.js';
+
+  await updateNavAuth();
+  await initRecipePage();
+
+  // Init reviews after recipe loads
+  const params   = new URLSearchParams(window.location.search);
+  const recipeId = params.get('id');
+  if (recipeId) await initReviews(recipeId);
+</script>
+<script>
+  async function handleLogout() {
+    const { signOut } = await import('./js/auth.js');
+    await signOut();
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Saved Recipes — RecipeFinder</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+  <a href="index.html" class="nav-brand">
+    <span class="brand-icon">🍳</span>
+    <span>Recipe<em>Finder</em></span>
+  </a>
+  <ul class="nav-links">
+    <li><span id="nav-user-email"></span></li>
+    <li><a href="favorites.html" id="nav-favs" style="display:none"><span>♥ Saved</span></a></li>
+    <li><a href="add-recipe.html" id="nav-add" class="nav-btn-primary" style="display:none"><span>+ Add Recipe</span></a></li>
+    <li><a href="auth.html" id="nav-login"><span>Sign In</span></a></li>
+    <li><button id="nav-logout" style="display:none" onclick="handleLogout()"><span>Sign Out</span></button></li>
+  </ul>
+</nav>
+
+<!-- Page Header -->
+<div class="page-header">
+  <div class="page-header-inner">
+    <h1>♥ Saved Recipes</h1>
+    <p><span id="fav-count" class="fav-count">0 recipes</span> in your collection</p>
+  </div>
+</div>
+
+<main class="page-container favorites-page">
+
+  <!-- Gate: not logged in -->
+  <div id="favorites-gate" class="favorites-gate">
+    <div class="gate-icon">🔐</div>
+    <h3>Sign in to see your favourites</h3>
+    <p>Save recipes you love and access them anytime.</p>
+    <a href="auth.html" class="btn-action">Sign In</a>
+    &nbsp;
+    <a href="index.html" style="font-size:0.875rem;color:var(--bark-light)">Browse recipes</a>
+  </div>
+
+  <!-- Content: logged in -->
+  <div id="favorites-content" style="display:none">
+    <!-- Loading -->
+    <div id="loading" style="display:none;flex-direction:column;align-items:center;padding:4rem 0;gap:1rem">
+      <div class="spinner"></div>
+      <span style="color:var(--bark-light);font-size:0.9rem">Loading saved recipes…</span>
+    </div>
+
+    <!-- Grid -->
+    <div id="favorites-grid" class="recipes-grid"></div>
+  </div>
+
+</main>
+
+<footer>
+  <p>Made with ❤️ by <strong>RecipeFinder</strong> — Powered by Supabase</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script type="module">
+  import { updateNavAuth } from './js/auth.js';
+  import { initFavoritesPage } from './js/favorites.js';
+  await updateNavAuth();
+  await initFavoritesPage();
+</script>
+<script>
+  async function handleLogout() {
+    const { signOut } = await import('./js/auth.js');
+    await signOut();
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RecipeFinder — Discover Amazing Recipes</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+  <a href="index.html" class="nav-brand">
+    <span class="brand-icon">🍳</span>
+    <span>Recipe<em>Finder</em></span>
+  </a>
+  <ul class="nav-links">
+    <li><span id="nav-user-email"></span></li>
+    <li><a href="favorites.html" id="nav-favs" style="display:none"><span>♥ Saved</span></a></li>
+    <li><a href="add-recipe.html" id="nav-add" class="nav-btn-primary" style="display:none"><span>+ Add Recipe</span></a></li>
+    <li><a href="auth.html" id="nav-login"><span>Sign In</span></a></li>
+    <li><button id="nav-logout" style="display:none" onclick="handleLogout()"><span>Sign Out</span></button></li>
+  </ul>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-tag">✦ 500+ Recipes from Around the World</div>
+  <h1>Find Your Next<br><span>Favourite Meal</span></h1>
+  <p>Explore recipes from every cuisine — Indian curries, Italian pasta, and everything in between.</p>
+  <div class="hero-search">
+    <input type="text" id="search-input" placeholder="Search recipes, ingredients…" autocomplete="off">
+    <button>🔍 Search</button>
+  </div>
+</section>
+
+<!-- Main -->
+<main class="page-container">
+  <!-- Filters -->
+  <div class="filters-bar">
+    <div class="filter-group">
+      <label>Category</label>
+      <select id="filter-category" class="filter-select">
+        <option value="">All Categories</option>
+        <option>Breakfast</option>
+        <option>Lunch</option>
+        <option>Dinner</option>
+        <option>Snack</option>
+        <option>Dessert</option>
+        <option>Drink</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>Cuisine</label>
+      <select id="filter-cuisine" class="filter-select">
+        <option value="">All Cuisines</option>
+        <option>Indian</option>
+        <option>Italian</option>
+        <option>Mexican</option>
+        <option>Japanese</option>
+        <option>Chinese</option>
+        <option>American</option>
+        <option>Mediterranean</option>
+        <option>Thai</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>Min Rating</label>
+      <select id="filter-rating" class="filter-select">
+        <option value="">Any Rating</option>
+        <option value="3">3+ Stars</option>
+        <option value="4">4+ Stars</option>
+        <option value="4.5">4.5+ Stars</option>
+      </select>
+    </div>
+    <button id="clear-filters" class="btn-clear">✕ Clear</button>
+    <span id="recipe-count" class="results-count"></span>
+  </div>
+
+  <!-- Section header -->
+  <div class="section-header">
+    <h2>All Recipes</h2>
+  </div>
+
+  <!-- Loading -->
+  <div id="loading">
+    <div class="spinner"></div>
+    <span style="color:var(--bark-light);font-size:0.9rem">Loading recipes…</span>
+  </div>
+
+  <!-- Grid -->
+  <div id="recipes-grid" class="recipes-grid"></div>
+</main>
+
+<footer>
+  <p>Made with ❤️ by <strong>RecipeFinder</strong> — Powered by Supabase</p>
+</footer>
+
+<!-- Supabase CDN -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script type="module">
+  import { updateNavAuth } from './js/auth.js';
+  import { initHomePage } from './js/recipes.js';
+  await updateNavAuth();
+  await initHomePage();
+</script>
+<script>
+  async function handleLogout() {
+    const { signOut } = await import('./js/auth.js');
+    await signOut();
+  }
+</script>
+
+</body>
+</html>

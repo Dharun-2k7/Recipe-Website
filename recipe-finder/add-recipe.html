@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Recipe — RecipeFinder</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+  <a href="index.html" class="nav-brand">
+    <span class="brand-icon">🍳</span>
+    <span>Recipe<em>Finder</em></span>
+  </a>
+  <ul class="nav-links">
+    <li><span id="nav-user-email"></span></li>
+    <li><a href="favorites.html" id="nav-favs" style="display:none"><span>♥ Saved</span></a></li>
+    <li><a href="add-recipe.html" id="nav-add" class="nav-btn-primary" style="display:none"><span>+ Add Recipe</span></a></li>
+    <li><a href="auth.html" id="nav-login"><span>Sign In</span></a></li>
+    <li><button id="nav-logout" style="display:none" onclick="handleLogout()"><span>Sign Out</span></button></li>
+  </ul>
+</nav>
+
+<main class="add-recipe-page">
+  <a href="index.html" style="display:inline-flex;align-items:center;gap:6px;font-size:0.85rem;color:var(--bark-light);font-weight:500;margin-bottom:1.5rem">
+    ← Back to recipes
+  </a>
+  <h1>Share a Recipe</h1>
+  <p class="subtitle">Share your culinary creation with the RecipeFinder community</p>
+
+  <form class="add-recipe-form" id="add-recipe-form">
+
+    <!-- Image Upload -->
+    <div class="form-group">
+      <label class="form-label">Recipe Photo</label>
+      <div class="image-upload-area" onclick="document.getElementById('img-input').click()">
+        <input type="file" id="img-input" name="image" accept="image/*">
+        <div class="upload-icon">📷</div>
+        <div class="upload-text"><strong>Click to upload</strong> a photo</div>
+        <div class="upload-text" style="font-size:0.72rem;margin-top:4px">JPG, PNG, WebP — Max 5MB</div>
+        <img id="image-preview" src="" alt="Preview">
+      </div>
+    </div>
+
+    <!-- Title -->
+    <div class="form-group">
+      <label class="form-label">Recipe Title *</label>
+      <input class="form-input" type="text" name="title" placeholder="e.g. Creamy Butter Chicken" required maxlength="100">
+    </div>
+
+    <!-- Description -->
+    <div class="form-group">
+      <label class="form-label">Description *</label>
+      <textarea class="form-textarea" name="description" placeholder="Brief description of the recipe…" required rows="3"></textarea>
+    </div>
+
+    <!-- Category + Cuisine -->
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Category *</label>
+        <select class="form-select" name="category" required>
+          <option value="">Select…</option>
+          <option>Breakfast</option>
+          <option>Lunch</option>
+          <option>Dinner</option>
+          <option>Snack</option>
+          <option>Dessert</option>
+          <option>Drink</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Cuisine *</label>
+        <input class="form-input" type="text" name="cuisine" placeholder="e.g. Indian, Italian…" required>
+      </div>
+    </div>
+
+    <!-- Time + Difficulty -->
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Cooking Time (minutes) *</label>
+        <input class="form-input" type="number" name="cooking_time" placeholder="e.g. 45" min="5" max="360" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Difficulty *</label>
+        <select class="form-select" name="difficulty" required>
+          <option value="">Select…</option>
+          <option>Easy</option>
+          <option>Medium</option>
+          <option>Hard</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Ingredients -->
+    <div class="form-group">
+      <label class="form-label">Ingredients * <span class="form-hint">(one per line)</span></label>
+      <textarea class="form-textarea" name="ingredients" placeholder="2 cups basmati rice&#10;400g chicken breast&#10;1 can coconut milk&#10;..." required rows="7"></textarea>
+    </div>
+
+    <!-- Steps -->
+    <div class="form-group">
+      <label class="form-label">Instructions * <span class="form-hint">(one step per line)</span></label>
+      <textarea class="form-textarea" name="steps" placeholder="Marinate the chicken in yogurt and spices for 30 minutes.&#10;Heat oil in a pan over medium heat.&#10;..." required rows="8"></textarea>
+    </div>
+
+    <div id="form-msg" class="form-message"></div>
+
+    <button type="submit" class="btn-submit-recipe">🚀 Publish Recipe</button>
+  </form>
+</main>
+
+<footer>
+  <p>Made with ❤️ by <strong>RecipeFinder</strong> — Powered by Supabase</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script type="module">
+  import { updateNavAuth } from './js/auth.js';
+  import { initAddRecipePage } from './js/recipes.js';
+  await updateNavAuth();
+  await initAddRecipePage();
+
+  // Image preview
+  document.getElementById('img-input').addEventListener('change', (e) => {
+    const file    = e.target.files[0];
+    const preview = document.getElementById('image-preview');
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        preview.src     = ev.target.result;
+        preview.style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+</script>
+<script>
+  async function handleLogout() {
+    const { signOut } = await import('./js/auth.js');
+    await signOut();
+  }
+</script>
+
+</body>
+</html>
